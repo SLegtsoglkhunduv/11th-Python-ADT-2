@@ -1,30 +1,17 @@
-# Python Stack
+# Python Stack 2
 
 Read the Abstract Data Types lecture (Stack section) before you start.
 https://drive.google.com/file/d/1jXGQdSvuUYjGXl-PUuHMUzKWEBGQoARL/view?usp=sharing
 
 **Rules for this assignment**
 
-- The stack is an **array of 10 elements** and a **pointer** called `TopOfStack`.
+- The stack is an **array of 8 elements** and a **pointer** called `TopOfStack`.
 - Do **not** use `.append()` or `.pop()` inside `Push()` and `Pop()`.
   Change `TopOfStack` yourself and use `Stack[TopOfStack]`. The tests check for this.
 - Functions **return** their answer — do not print.
 - Every function that changes `Stack` or `TopOfStack` needs this line at the top:
   `global Stack, TopOfStack`
 
-**How the stack looks**
-
-`TopOfStack` is the **index of the top item**. When the stack is empty there
-is no top item, so `TopOfStack` is `-1`.
-
-    After Push(15), Push(27), Push(40):
-
-    index:   0    1    2    3    4    5    6    7    8    9
-    Stack: [15,  27,  40,  -1,  -1,  -1,  -1,  -1,  -1,  -1]
-                       ↑
-                  TopOfStack = 2
-
----
 
 ## Exercise 1
 
@@ -32,37 +19,39 @@ is no top item, so `TopOfStack` is `-1`.
 
 Set up the stack:
 
-- `Stack` → a global array of **10** elements, all set to `-1`
+- `Stack` → a global array of **8** elements, all set to `-1`
 - `TopOfStack` → a global integer, set to `-1`
 
-Then write two functions:
+Then write two functions.
 
-`IsEmpty()`
+`Push(Item)`
 
-- Return `True` if the stack is empty (`TopOfStack` is `-1`), otherwise `False`
+- If the stack is full, return `False`
+- Otherwise move `TopOfStack` up by 1, store `Item` there, and return `True`
 
-`IsFull()`
+`Pop()`
 
-- Return `True` if the stack is full, otherwise `False`
-- The last index of a 10-element array is **9** — so the stack is full when
-  `TopOfStack` is `9`
+- If the stack is empty, return `-1`
+- Otherwise return the top item, and move `TopOfStack` down by 1
 
 **Example:**
 
     Input:
-      print(Stack)
+      print(Push(10))
+      print(Push(20))
+      print(Push(30))
+      print(Pop())
       print(TopOfStack)
-      print(IsEmpty())
-      print(IsFull())
 
     Output:
-      [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
-      -1
       True
-      False
+      True
+      True
+      30
+      1
 
-*Hint:* do **not** use `len(Stack)` — the array always has 10 elements, even
-when the stack is empty. Only `TopOfStack` tells you how full it is.
+Remember the order from Stack 1: **Push** moves the pointer *then* stores.
+**Pop** reads the item *then* moves the pointer.
 
 ---
 
@@ -70,36 +59,38 @@ when the stack is empty. Only `TopOfStack` tells you how full it is.
 
 **Problem:**
 
-`Push(Item)`
+`ShowStack()`
 
-Add `Item` to the **top** of the stack.
+Return every item in the stack as one string, from the **top** down to the
+**bottom**, with **one space** between them. Return `""` if the stack is empty.
 
-1. If the stack is full, return `False` (you can use `IsFull()`)
-2. Otherwise add 1 to `TopOfStack`
-3. Store `Item` at `Stack[TopOfStack]`
-4. Return `True`
+Do **not** change the stack.
 
 **Example:**
 
     Input:
-      print(Push(15))
-      print(Push(27))
-      print(Stack[0], Stack[1])
-      print(TopOfStack)
+      Push(10)
+      Push(20)
+      Push(30)
+      print(ShowStack())
+      Pop()
+      print(ShowStack())
 
     Output:
-      True
-      True
-      15 27
-      1
+      30 20 10
+      20 10
 
-What happens step by step:
+Look at the array after that `Pop()`:
 
-    Push(15):  TopOfStack -1 → 0    Stack[0] = 15
-    Push(27):  TopOfStack  0 → 1    Stack[1] = 27
+    index:   0    1    2    3   ...
+    Stack: [10,  20,  30,  -1, ...]
+                  ↑
+             TopOfStack = 1
 
-**Careful with the order:** move `TopOfStack` up **first**, then store.
-If you store first, you write into `Stack[-1]` — the wrong place!
+`30` is **still in the array** — `Pop()` only moved the pointer. So
+`ShowStack()` must start at `TopOfStack`, not at the end of the array.
+
+*Hint:* `range(TopOfStack, -1, -1)` counts **down** from `TopOfStack` to 0.
 
 ---
 
@@ -107,37 +98,41 @@ If you store first, you write into `Stack[-1]` — the wrong place!
 
 **Problem:**
 
-`Pop()`
+`DecimalToBinary(Number)`
 
-Remove the **top** item and return it.
+`Number` is a whole number from `0` to `255`. Use **your stack** to change it
+into a binary string.
 
-1. If the stack is empty, return `-1` (you can use `IsEmpty()`)
-2. Otherwise read the item at `Stack[TopOfStack]` and keep it in a variable
-3. Take 1 off `TopOfStack`
-4. Return the item
+1. **Empty the stack first** by setting `TopOfStack` to `-1`.
+2. If `Number` is `0`, return `"0"`.
+3. While `Number` is more than 0:
+    - Push the remainder `Number % 2`
+    - Divide `Number` by 2 with `//`
+4. Pop every digit off the stack, joining them into one string, and return it.
+
+Do **not** use `bin()` or `format()`.
 
 **Example:**
 
-    Stack before:  [10, 20, 30, -1, ...]    TopOfStack = 2
+    Input:                      Output:
+      DecimalToBinary(5)          "101"
+      DecimalToBinary(13)         "1101"
+      DecimalToBinary(255)        "11111111"
+      DecimalToBinary(0)          "0"
 
-    Input:
-      print(Pop())
-      print(TopOfStack)
-      print(Pop())
-      print(Pop())
-      print(Pop())
+How it works for `13`:
 
-    Output:
-      30
-      1
-      20
-      10
-      -1
+    13 % 2 = 1   Push 1      13 // 2 = 6
+     6 % 2 = 0   Push 0       6 // 2 = 3
+     3 % 2 = 1   Push 1       3 // 2 = 1
+     1 % 2 = 1   Push 1       1 // 2 = 0   stop
 
-The last `Pop()` returns `-1` because the stack is empty.
+    Stack (bottom → top):   1  0  1  1
+    Pop them all:           1  1  0  1    →   "1101"
 
-**Careful with the order:** read the item **first**, then move
-`TopOfStack` down. If you move first, you return the wrong item.
+The remainders come out **backwards** — the stack turns them around.
+
+Why is the stack size 8? The biggest number, 255, is `11111111` — exactly 8 digits.
 
 ---
 
@@ -145,69 +140,47 @@ The last `Pop()` returns `-1` because the stack is empty.
 
 **Problem:**
 
-Write two small functions.
+`Editor(Commands)`
 
-`Peek()`
+A tiny text editor with an **undo** button. `Commands` is a list of strings.
+Each command is either:
 
-- Return the top item **without removing it** — `TopOfStack` must not change
-- If the stack is empty, return `-1`
+- `"type x"` → type the letter `x` — **push** it onto the stack
+- `"undo"` → remove the last letter typed — **pop** it off the stack
 
-`Size()`
+Steps:
 
-- Return how many items are in the stack
+1. **Empty the stack first** by setting `TopOfStack` to `-1`.
+2. Carry out every command in order.
+    - `"undo"` on an empty stack does nothing.
+    - If the stack is full, the letter is not typed.
+3. Return the finished text: the letters from the **bottom** of the stack
+   (`Stack[0]`) up to the **top**.
 
 **Example:**
-
-    Stack:  [8, 3, -1, ...]    TopOfStack = 1
 
     Input:
-      print(Peek())
-      print(Peek())
-      print(Size())
+      print(Editor(["type c", "type a", "type r", "undo", "type t"]))
 
     Output:
-      3
-      3
-      2
+      cat
 
-*Hint:* if `TopOfStack` is 1, there are **2** items (index 0 and index 1).
-Is there a simple sum that turns `TopOfStack` into the size?
+Step by step:
 
----
+    type c    Stack: c
+    type a    Stack: c a
+    type r    Stack: c a r
+    undo      Stack: c a        ← r removed
+    type t    Stack: c a t
 
-## Exercise 5
+    Answer: "cat"
 
-**Problem:**
+More examples:
 
-`ReverseWord(Word)`
+    Input:                                           Output:
+      Editor(["undo", "type h", "type i"])             "hi"
+      Editor(["type a", "undo", "undo", "type b"])     "b"
+      Editor([])                                       ""
 
-Use **your stack** to reverse a word. `Word` has at most 10 letters.
+*Hint:* `"type a".split(" ")` gives `["type", "a"]` — the letter is at index 1.
 
-1. **Empty the stack first:** set `TopOfStack` to `-1`
-2. Push every letter of `Word` onto the stack
-3. Pop the letters one by one — joining them into a new string —
-   until the stack is empty
-4. Return the new string
-
-Do **not** use `[::-1]` or `reversed()`. The point is to use the stack!
-
-**Example:**
-
-    Input:                       Output:
-      ReverseWord("HELLO")         "OLLEH"
-      ReverseWord("Python")        "nohtyP"
-      ReverseWord("a")             "a"
-      ReverseWord("")              ""
-
-How it works for `"CAT"`:
-
-    Push C, Push A, Push T      Stack:  C  A  T   ← T is on top
-
-    Pop → T                     Result: "T"
-    Pop → A                     Result: "TA"
-    Pop → C                     Result: "TAC"
-
-The **last** letter in is the **first** letter out — that is why a stack
-turns the word around.
-
----
