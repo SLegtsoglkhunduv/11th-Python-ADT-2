@@ -10,13 +10,13 @@ HINTS = [
 
     ["index out of range",
      "You used an index outside the array.\n"
-     "  - Did you fill Stack with 10 elements (all -1) at the start?\n"
-     "  - Does Push check if the stack is full BEFORE adding 1 to TopOfStack?"],
+     "  - Did you fill Stack with 8 elements (all -1) at the start?\n"
+     "  - Does Push check for full (TopOfStack == 7) BEFORE adding 1?\n"
+     "  - Editor: \"type a\".split(\" \") gives [\"type\", \"a\"] - the letter is at index 1."],
 
     ["can only concatenate str",
      "You tried to join a string and a number with +.\n"
-     "Is Pop() returning -1 because the stack is empty? Stop popping when\n"
-     "IsEmpty() is True."],
+     "Change the number into a string first, for example:  str(1)"],
 
     ["'NoneType' object",
      "Something is None (nothing). A function probably forgot to 'return'\n"
