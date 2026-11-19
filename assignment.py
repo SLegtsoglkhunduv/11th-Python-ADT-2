@@ -4,32 +4,64 @@
 # Exercise 1
 Stack = []
 TopOfStack = -1
-# Write code here to fill Stack with 8 elements, all -1
+for i in range(8):
+    Stack.append(-1)
 
 
 def Push(Item):
-    # Write your code here
-    pass
+    global TopOfStack
+    if TopOfStack == 7:
+        return False
+    TopOfStack += 1
+    Stack[TopOfStack] = Item
+    return True
 
 
 def Pop():
-    # Write your code here
-    pass
+    global TopOfStack
+    if TopOfStack == -1:
+        return -1
+    Item = Stack[TopOfStack]
+    TopOfStack -= 1
+    return Item
 
 
 # Exercise 2
 def ShowStack():
-    # Write your code here
-    pass
+    if TopOfStack == -1:
+        return ""
+    items = []
+    for i in range(TopOfStack, -1, -1):
+        items.append(str(Stack[i]))
+    return " ".join(items)
 
 
 # Exercise 3
 def DecimalToBinary(Number):
-    # Write your code here
-    pass
+    global TopOfStack
+    TopOfStack = -1
+    if Number == 0:
+        return "0"
+    while Number > 0:
+        Push(Number % 2)
+        Number = Number // 2
+    binary = ""
+    while TopOfStack != -1:
+        binary += str(Pop())
+    return binary
 
 
 # Exercise 4
 def Editor(Commands):
-    # Write your code here
-    pass
+    global TopOfStack
+    TopOfStack = -1
+    for cmd in Commands:
+        if cmd == "undo":
+            Pop()
+        else:
+            letter = cmd.split(" ")[1]
+            Push(letter)
+    text = ""
+    for i in range(TopOfStack + 1):
+        text += Stack[i]
+    return text
